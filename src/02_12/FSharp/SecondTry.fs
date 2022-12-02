@@ -19,15 +19,14 @@ let toSelection selection =
     | "C" | "Z" -> Scissors
     | _ -> failwith "Undefined input"
 
-
-let toResult round = 
+let play round = 
     match round with
     | Scissors, Rock -> Win
     | Rock, Paper -> Win
     | Paper, Scissors -> Win
     | p1, p2 -> if p1 = p2 then Draw else Loose
     
-let toScore (result:Result) =
+let getScore (result:Result) =
         match result with
         | Win -> 6
         | Draw -> 3
@@ -40,7 +39,7 @@ let playRound (round: Round) =
         | Paper -> 2
         | Scissors -> 3
         
-    (round |> toResult |> toScore) + selectionScore
+    (round |> play |> getScore) + selectionScore
 
 let resultToPint result =
     match result with
@@ -59,4 +58,3 @@ let calcPlayScore =
     |> Seq.map toRounds 
     |> Seq.map playRound
     |> Seq.sum
-    
