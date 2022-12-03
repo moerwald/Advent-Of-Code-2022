@@ -1,6 +1,33 @@
-﻿// For more information see https://aka.ms/fsharp-console-apps
-open AdventOfCode.Input
-open AdventOfCode.Driver
+﻿open System.IO
+open System
+
+let loadFile filePath = File.ReadAllLines filePath
+
+let itemToPriority (item: char) =
+    match item with
+    | item when Char.IsLower(item) -> int item - 96 // subtract the ASCII offset
+    | _ -> int item - 38 // subtract the ASCII offset
+
+let splitToCompartments (rucksack: string) =
+    let halfIndex = rucksack.Length / 2
+    (Set.ofSeq (rucksack[.. halfIndex - 1]), Set.ofSeq (rucksack[halfIndex  ..]))
+
+let getDuplicateItemInRucksack rucksack =
+    let compartments = rucksack |> splitToCompartments
+    Set.intersect (fst compartments) (snd compartments) |> Set.maxElement
+
+let sumOfRucksackItems (items: string []) =
+    items
+    |> Seq.map (fun (x: string) -> getDuplicateItemInRucksack x)
+    |> Seq.map itemToPriority
+    |> Seq.sumBy id
+    
+let findBadge (items: string[]) =
+    items
+    |> Seq.map (fun (x:string) -> Set.ofSeq x)
+    |> Set.intersectMany
+    |> Set.maxElement
+    |> itemToPriority
 
 // Part 1
         

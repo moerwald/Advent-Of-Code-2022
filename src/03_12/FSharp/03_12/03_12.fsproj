@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Input.fs" />
-    <Compile Include="Driver.fs" />
     <Compile Include="Program.fs" />
     <Content Include="test_input.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
