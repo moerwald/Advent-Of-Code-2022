@@ -13,7 +13,7 @@ let private parseToTuple (line:string) =
     | [|var1 ; var2|] -> Some ( createSection var1   ,  createSection var2 )
     | _ -> None
     
-let private doPairSectionsIntersect pair =
+let private intersectPairs pair predicate =
     match pair with
     | None -> false
     | Some x ->
@@ -21,14 +21,27 @@ let private doPairSectionsIntersect pair =
         let s = Set.ofArray (snd x)
         let r = Set.intersect f s
         let intersectCount = r.Count
-        intersectCount = f.Count  || intersectCount = s.Count
+        
+        predicate intersectCount f.Count s.Count
+    
+let private doPairSectionsContainEachOther pair =
+    intersectPairs pair (fun intersectCnt firstPairCnt secondPairCount ->  intersectCnt = firstPairCnt  || intersectCnt = secondPairCount )
+        
+let private doPairSectionsIntersect pair =
+    intersectPairs pair (fun intersectCnt _ _ ->  intersectCnt > 0)
 
 let part1 (lines:string seq) =
+   let r = lines
+            |> Seq.map parseToTuple
+            |> Seq.map doPairSectionsContainEachOther
+            |> Seq.filter (fun x -> x = true)
+   (List.ofSeq r).Length
+            
+let part2 (lines:string seq) =
    let r = lines
             |> Seq.map parseToTuple
             |> Seq.map doPairSectionsIntersect
             |> Seq.filter (fun x -> x = true)
    (List.ofSeq r).Length
-            
             
 
