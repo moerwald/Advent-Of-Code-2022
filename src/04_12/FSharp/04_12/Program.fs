@@ -20,9 +20,8 @@ let private intersectPairs pair predicate =
         let f = Set.ofArray (fst x)
         let s = Set.ofArray (snd x)
         let r = Set.intersect f s
-        let intersectCount = r.Count
         
-        predicate intersectCount f.Count s.Count
+        predicate r.Count f.Count s.Count
     
 let private doPairSectionsContainEachOther pair =
     intersectPairs pair (fun intersectCnt firstPairCnt secondPairCount ->  intersectCnt = firstPairCnt  || intersectCnt = secondPairCount )
