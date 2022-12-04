@@ -26,21 +26,20 @@ let private intersectPairs pair predicate =
 let private doPairSectionsContainEachOther pair =
     intersectPairs pair (fun intersectCnt firstPairCnt secondPairCount ->  intersectCnt = firstPairCnt  || intersectCnt = secondPairCount )
         
-let private doPairSectionsIntersect pair =
-    intersectPairs pair (fun intersectCnt _ _ ->  intersectCnt > 0)
+let private doPairSectionsIntersect pair = intersectPairs pair (fun intersectCnt _ _ ->  intersectCnt > 0)
 
-let part1 (lines:string seq) =
-   let r = lines
-            |> Seq.map parseToTuple
-            |> Seq.map doPairSectionsContainEachOther
-            |> Seq.filter (fun x -> x = true)
-   (List.ofSeq r).Length
+let part1 (lines:string list) =
+            lines
+            |> List.map parseToTuple
+            |> List.map doPairSectionsContainEachOther
+            |> List.filter (fun x -> x = true)
+            |> List.length
             
-let part2 (lines:string seq) =
-   let r = lines
-            |> Seq.map parseToTuple
-            |> Seq.map doPairSectionsIntersect
-            |> Seq.filter (fun x -> x = true)
-   (List.ofSeq r).Length
+let part2 (lines:string list) =
+            lines
+            |> List.map parseToTuple
+            |> List.map doPairSectionsIntersect
+            |> List.filter (fun x -> x = true)
+            |> List.length
             
 

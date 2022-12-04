@@ -23,15 +23,15 @@ let adventOfCodeInputs: obj[] list =
 [<Theory>]
 [<MemberData(nameof adventOfCodeInputs)>]
 let ``Part 1`` data =
-    let lines = loadFile data.FileName
-    let result = lines |> part1
-    
-    result |> should equal data.ExpectedResultPart1
+    loadFile data.FileName
+    |> List.ofSeq
+    |> part1
+    |> should equal data.ExpectedResultPart1
     
 [<Theory>]
 [<MemberData(nameof adventOfCodeInputs)>]
 let ``Part 2`` data =
-    let lines = loadFile data.FileName
-    let result = lines |> part2
-    
-    result |> should equal data.ExpectedResultPart2
+    loadFile data.FileName
+    |> List.ofSeq
+    |> part2
+    |> should equal data.ExpectedResultPart2
