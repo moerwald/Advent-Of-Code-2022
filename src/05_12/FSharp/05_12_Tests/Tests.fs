@@ -12,6 +12,10 @@ module AoC =
           _to: int
         }
     
+    type CraneType =
+        | CrateMover9000
+        | CrateMover9001
+    
     let readLines fileName = System.IO.File.ReadAllLines fileName
 
     let rec getNumberOfStacks index = function
@@ -70,34 +74,42 @@ module AoC =
             // Adapt to array index
             { _amount = a ; _from = f - 1; _to = t - 1  } )
         
-    let moveCrate (array:string[]) (move:Move)=
+    let moveCrate (array:string[]) (craneType:CraneType) (move:Move)  =
         let from = move._from
         let sourceColumn = array[from]
         let numberOfItemsToKeep = sourceColumn.Length - move._amount
         let keepNumberOfItems (column:string) nrOfItems = column.Remove nrOfItems
         
-        let stackToMove = array[from]
+        let firstPartMove = array[from]
                           |> Seq.skip numberOfItemsToKeep
                           |> Seq.take move._amount
-                          |> Seq.rev
-                          |> String.Concat
+        
+        let (stackToMove:string) = match craneType with
+                                   | CraneType.CrateMover9000 -> firstPartMove |> Seq.rev 
+                                   | _ -> firstPartMove
+                                   |> String.Concat
         
         array[from] <- keepNumberOfItems sourceColumn numberOfItemsToKeep
         array[move._to]  <- array[move._to] + stackToMove
         
-    let part1 fileName =
+    let moveCrates fileName cranType =
         let lines = List.ofArray (readLines fileName)
         let crateArray = constructCrateArray lines
         let moves = parseMoves lines
         
         moves
-        |> List.iter (moveCrate crateArray)
+        |> List.iter (moveCrate crateArray cranType)
         
         crateArray
         |> Seq.map (fun x -> x.Substring(x.Length - 1))
         |> String.concat ""
         
-
+    let part1 fileName =
+        moveCrates fileName CraneType.CrateMover9000
+        
+    let part2 fileName =
+        moveCrates fileName CraneType.CrateMover9001
+        
 open AoC
 open FsUnit
 
@@ -163,6 +175,13 @@ let ``parse move list`` line amountExpected fromExpected toExpected =
 [<Theory>]
 [<InlineData("test_input.txt", "CMZ")>]
 [<InlineData("input.txt", "QPJPLMNNR")>]
-let ``part, check content`` filename expected  =
+let ``part1, check content`` filename expected  =
     part1 filename
+    |> should equal expected
+    
+[<Theory>]
+[<InlineData("test_input.txt", "MCD")>]
+[<InlineData("input.txt", "BQDNWJPVJ")>]
+let ``part2, check content`` filename expected  =
+    part2 filename
     |> should equal expected
