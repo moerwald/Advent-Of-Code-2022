@@ -7,14 +7,16 @@ open FsUnit
 
 module AdventOfCode =
     type FileInfo = { name: string; fileSize: int }
+    
     type DirectoryInfo = { name: string }
+    
     type EmptyInfo = { restOfList: string list }
-
+    
     type FileSystemNode =
         | File of FileInfo
         | Directory of DirectoryInfo * FileSystemNode list
         | EmptyNode of EmptyInfo
-
+        
     type SizeType =
         | FileType
         | DirectoryType
@@ -76,7 +78,7 @@ module AdventOfCode =
 
         match input with
         | _ :: t -> Directory({ name = "/" }, List.ofSeq (buildUpTree t))
-        | _ -> Directory({ name = " " }, []) // calm the compiler
+        | _ -> Directory({ name = " " }, []) // settle the compiler
 
     let generateDirectorySizes tree =
         let rec calcDirectorySize (tree: FileSystemNode) =
@@ -112,7 +114,7 @@ module AdventOfCode =
                         |> List.collect List.ofSeq
 
                     yield! r
-                | _ -> yield Directory({ name = "" }, []) // calm the compiler
+                | _ -> yield Directory({ name = "" }, []) // settle the compiler
             }
 
         let dirs = List.ofSeq (getAllDirectoryInfos tree)
