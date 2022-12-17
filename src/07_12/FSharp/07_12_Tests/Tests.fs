@@ -7,16 +7,16 @@ open FsUnit
 
 module AdventOfCode =
     type FileInfo = { name: string; fileSize: int }
-    
+
     type DirectoryInfo = { name: string }
-    
+
     type EmptyInfo = { restOfList: string list }
-    
+
     type FileSystemNode =
         | File of FileInfo
         | Directory of DirectoryInfo * FileSystemNode list
         | EmptyNode of EmptyInfo
-        
+
     type SizeType =
         | FileType
         | DirectoryType
@@ -129,14 +129,10 @@ module AdventOfCode =
 
 open AdventOfCode
 
-[<Fact>]
-let ``Part1, test input`` () =
-    let input = System.IO.File.ReadLines "test_input.txt"
-    let x = part1 100000 (List.ofSeq input)
-    x |> should equal 95437
+[<Theory>]
+[<InlineData("test_input.txt", 95437)>]
+[<InlineData("input.txt", 1915606)>]
+let part1 file expected =
+    let input = System.IO.File.ReadLines file
+    part1 100000 (List.ofSeq input) |> should equal expected
 
-[<Fact>]
-let ``Part1, real input`` () =
-    let input = System.IO.File.ReadLines "input.txt"
-    let x = part1 100000 (List.ofSeq input)
-    x |> should equal 1915606
