@@ -127,6 +127,25 @@ module AdventOfCode =
         dirs |> List.sumBy (fun x -> x.size)
 
 
+    let part2 input =
+        let totalDiskSpace = 70_000_000
+        let requiredUpdateSpace = 30_000_000
+
+        let tree = generateFileSystemTree input
+        let dirSizes = generateDirectorySizes tree
+        let rootDirSize = dirSizes |> List.filter (fun x -> x.name = "/") |> List.head
+        let freeSpace = totalDiskSpace - rootDirSize.size
+        let spaceNeeded = requiredUpdateSpace - freeSpace
+
+        let deleteCandidate =
+            dirSizes
+            |> List.filter (fun x -> x.size >= spaceNeeded)
+            |> List.minBy (fun x -> x.size)
+
+        deleteCandidate.size
+
+
+
 open AdventOfCode
 
 [<Theory>]
@@ -136,3 +155,9 @@ let part1 file expected =
     let input = System.IO.File.ReadLines file
     part1 100000 (List.ofSeq input) |> should equal expected
 
+[<Theory>]
+[<InlineData("test_input.txt", 24933642)>]
+[<InlineData("input.txt", 5025657)>]
+let part2 file expected =
+    let input = System.IO.File.ReadLines file
+    part2 (List.ofSeq input) |> should equal expected
