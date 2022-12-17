@@ -80,7 +80,7 @@ module AdventOfCode =
         | _ :: t -> Directory({ name = "/" }, List.ofSeq (buildUpTree t))
         | _ -> Directory({ name = " " }, []) // settle the compiler
 
-    let generateDirectorySizes tree =
+    let private generateDirectorySizes tree =
         let rec calcDirectorySize (tree: FileSystemNode) =
             match tree with
             | File fi ->
@@ -130,17 +130,6 @@ module AdventOfCode =
 open AdventOfCode
 
 [<Fact>]
-let ``Part1, generate file system tree`` () =
-    let input = System.IO.File.ReadLines "test_input.txt"
-    let x = generateFileSystemTree (List.ofSeq input)
-
-    match x with
-    | Directory (directoryInfo, fileSystemNodes) ->
-        directoryInfo.name |> should equal "/"
-        fileSystemNodes.Length |> should equal 4
-    | _ -> failwith "xxx"
-
-[<Fact>]
 let ``Part1, test input`` () =
     let input = System.IO.File.ReadLines "test_input.txt"
     let x = part1 100000 (List.ofSeq input)
@@ -150,4 +139,4 @@ let ``Part1, test input`` () =
 let ``Part1, real input`` () =
     let input = System.IO.File.ReadLines "input.txt"
     let x = part1 100000 (List.ofSeq input)
-    x |> should equal 95437
+    x |> should equal 1915606
